@@ -9,6 +9,7 @@ import sn.modelsisbackendmba.repository.ProductTypeRepository;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalInt;
 
 @Service
 @Slf4j
@@ -42,15 +43,17 @@ public class ProductTypeService {
         }
     }
 
-    public void deleteProductType(String productTypeId) {
+    public ProductType deleteProductType(String productTypeId) {
+        ProductType result;
         Optional<ProductType> optionalProductType = productTypeRepository.findById(productTypeId);
         if (optionalProductType.isPresent()) {
             ProductType productType = optionalProductType.get();
             productType.setActive(false); // Mettre à jour l'état du produit à false
-            productTypeRepository.save(productType);
+            result = productTypeRepository.save(productType);
         } else {
             throw new IllegalArgumentException("Le Type de Produit est non trouvé avec l'ID : " + productTypeId);
         }
+        return result;
     }
 
     public ProductType updateProductTypes(ProductType product) {

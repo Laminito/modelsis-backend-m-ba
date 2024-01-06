@@ -3,7 +3,9 @@ package sn.modelsisbackendmba.service;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import sn.modelsisbackendmba.dto.ProductDto;
 import sn.modelsisbackendmba.model.Product;
 import sn.modelsisbackendmba.repository.ProductRepository;
 
@@ -46,24 +48,25 @@ public class ProductService {
             throw new IllegalArgumentException("Erreur de validation lors de l'ajout du produit");
         }
     }
-
     public Product updateProduct(Product product) {
         try {
             String productId = product.getId();
-            Optional<Product> existingProductName = productRepository.findByProductName(product.getProductName());
-            if(!existingProductName.isPresent()){
-                log.error("Le produit avec le nom "+product.getProductName()+" n'existe pas");
-                throw new IllegalArgumentException("Le produit avec le nom "+product.getProductName()+"n'existe pas");
+            Optional<Product> existingProduct = productRepository.findById(productId);
+
+            if (!existingProduct.isPresent()) {
+                log.error("Le produit avec l'id " + productId + " n'existe pas");
+                throw new IllegalArgumentException("Le produit avec l'id " + productId + " n'existe pas");
             }
-            Optional<Product> existingProduct = productRepository.findById(existingProductName.get().getId());
-            if(!existingProduct.isPresent()){
-                log.error("Le produit avec l'id "+productId+" n'existe pas");
-                throw new IllegalArgumentException("Le produit avec l'id "+productId+"n'existe pas");
-            }
-            Product productResult = existingProduct.get();
-            return productRepository.updateProduct(productResult.getId(),productResult.getProductName(),productResult.getProductType());
+
+            Product productToUpdate = existingProduct.get();
+            // Mettre à jour les champs du produit avec les valeurs fournies
+            productToUpdate.setProductName(product.getProductName());
+            productToUpdate.setProductType(product.getProductType());
+
+            // Enregistrer les modifications dans la base de données
+            return productRepository.save(productToUpdate);
         } catch (Exception ex) {
-           log.info("Une erreur est survenue lors de la mise à jour du produit : " + ex.toString());
+            log.error("Une erreur est survenue lors de la mise à jour du produit : " + ex.toString());
             throw new IllegalArgumentException("Erreur de validation lors de la mise à jour du produit");
         }
     }
@@ -78,6 +81,16 @@ public class ProductService {
         } else {
             log.info("Produit non trouvé avec l'ID : " + productId);
             throw new IllegalArgumentException("Produit non trouvé avec l'ID : " + productId);
+        }
+    }
+
+    public Product getProductById(String productId) {
+        try {
+            return productRepository.findById(productId)
+                    .orElse(null);
+        } catch (Exception ex) {
+            log.error("Une erreur s'est produite lors de la récupération du produit par ID : {}", ex.getMessage());
+            throw new IllegalArgumentException("Erreur lors de la récupération du produit par ID", ex);
         }
     }
 }
