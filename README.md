@@ -38,3 +38,6 @@ Les endpoints et leurs descriptions :
 - POST /product : Insère un nouveau produit
 - POST /productType : Insère un nouveau Type de Produit
 - PUT /product : Met à jour un Produit
+
+###Base Url par defaut(/api/modelsis)
+Ex : localhost:port/api/modelsis/...
