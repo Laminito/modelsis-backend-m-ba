@@ -48,7 +48,6 @@ public class ProductService {
             throw new IllegalArgumentException("Erreur de validation lors de l'ajout du produit");
         }
     }
-
     public Product updateProduct(Product product) {
         try {
             String productId = product.getId();
