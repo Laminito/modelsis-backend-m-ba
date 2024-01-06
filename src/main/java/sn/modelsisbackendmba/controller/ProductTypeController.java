@@ -124,7 +124,7 @@ public class ProductTypeController {
                     newProductType
             );
 
-            Map<String, CustomResponse> resultMap = new HashMap<>();
+            resultMap = new HashMap<>();
             resultMap.put("modelsis", customResponse);
 
             ModelsIsResponseDTO responseDTO = new ModelsIsResponseDTO();
@@ -139,7 +139,7 @@ public class ProductTypeController {
                     null
             );
 
-            Map<String, CustomResponse> resultMap = new HashMap<>();
+            resultMap = new HashMap<>();
             resultMap.put("modelsis", errorResponse);
 
             ModelsIsResponseDTO responseDTO = new ModelsIsResponseDTO();
