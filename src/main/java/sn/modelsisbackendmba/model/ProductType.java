@@ -1,6 +1,7 @@
 package sn.modelsisbackendmba.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,9 +11,11 @@ import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.Date;
 
+@CrossOrigin("*")
 @Entity
 @Getter
 @Setter
@@ -24,8 +27,7 @@ public class ProductType {
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
     private String id;
 
-    @Column(unique = true)
-    @NotNull
+    @Column(unique = true,nullable = false)
     private String type;
 
     private boolean active = true;
