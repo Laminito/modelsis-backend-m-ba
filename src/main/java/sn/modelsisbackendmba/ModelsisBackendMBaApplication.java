@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 public class ModelsisBackendMBaApplication {
 
     public static void main(String[] args) {
-        System.setProperty("server.servlet.context-path", "/api/modelsis");
+        //System.setProperty("server.servlet.context-path", "/api/modelsis");
         SpringApplication.run(ModelsisBackendMBaApplication.class, args);
     }
 

@@ -8,6 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import sn.modelsisbackendmba.controller.ProductController;
+import sn.modelsisbackendmba.dto.ModelsIsResponseDTO;
 import sn.modelsisbackendmba.dto.ProductDto;
 import sn.modelsisbackendmba.model.Product;
 import sn.modelsisbackendmba.model.ProductType;
@@ -41,7 +42,7 @@ public class ProductControllerTest {
         products.add(product);
         when(productService.getAllProducts()).thenReturn(products);
 
-        List<ProductDto> productDtos = productController.getAllProducts();
+        List<ProductDto> productDtos = (List<ProductDto>) productController.getAllProducts();
 
         verify(productService, times(1)).getAllProducts();
         assertEquals(1, productDtos.size());
@@ -98,13 +99,13 @@ public class ProductControllerTest {
         when(productService.updateProduct(product)).thenReturn(product);
 
         // Appelez la méthode à tester
-        ResponseEntity<ProductDto> response = productController.updateProduct(product);
+        ModelsIsResponseDTO response = productController.updateProduct(product);
 
         verify(productService, times(1)).updateProduct(product);
 
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody());    }
+        assertEquals(HttpStatus.OK, response.getModelsis().get(response).getStatusCode());
+        assertNotNull(response.getModelsis().get(response).getData());    }
 
     @Test
     public void testDeleteProduct() {
@@ -115,12 +116,12 @@ public class ProductControllerTest {
         ProductController productController = new ProductController();
         productController.setProductService(productService);
 
-        ResponseEntity<Void> response = productController.deleteProduct(productId);
+        ModelsIsResponseDTO response = productController.deleteProduct(productId);
 
         verify(productService, times(1)).deleteProduct(productId);
 
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-        assertNull(response.getBody());
+        assertEquals(HttpStatus.NO_CONTENT, response.getModelsis().get(response).getStatus());
+        assertNull(response.getModelsis().get(response).getData());
     }
 
 }
