@@ -29,25 +29,26 @@ public class ProductService {
             return Collections.emptyList(); // Renvoie une liste vide en cas d'erreur
         }
     }
-    public Product addProduct(Product product){
+    public Product addProduct(Product product) {
         try {
-            if (product == null) {
-                if (product.getProductName() == null || product.getProductName().trim().isEmpty()) {
-                   log.error("Le nom du produit est requis");
+            if (product != null) {
+                if (product.getProductName() != null && !product.getProductName().trim().isEmpty()) {
+                    log.info("Produit ajouté avec succès");
+                    return productRepository.save(product);
+                } else {
+                    log.error("Le nom du produit est requis");
                     throw new IllegalArgumentException("Le nom du produit est requis.");
                 }
-                log.info("Produit ajouté avec succes");
-                return productRepository.save(product);
             } else {
-                log.error("Echec d'enregistrement du Produit");
-                throw new IllegalArgumentException("Le nom du  produit à ajouter est null.");
+                log.error("Le produit à ajouter est null");
+                throw new IllegalArgumentException("Le produit à ajouter est null.");
             }
-
         } catch (Exception ex) {
-            log.info("Une erreur est survenue lors de l'ajout du produit : " + ex.toString());
+            log.error("Une erreur est survenue lors de l'ajout du produit : {}", ex.toString());
             throw new IllegalArgumentException("Erreur de validation lors de l'ajout du produit");
         }
     }
+
     public Product updateProduct(Product product) {
         try {
             String productId = product.getId();

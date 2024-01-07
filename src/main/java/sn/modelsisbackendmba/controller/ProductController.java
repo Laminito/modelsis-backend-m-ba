@@ -166,17 +166,107 @@ public class ProductController {
         return responseDTO;
     }
 
-    @PostMapping
-    public ResponseEntity<String> addProduct(@RequestBody Product product) {
+/*    @PostMapping
+    public ModelsIsResponseDTO addProduct(@RequestBody Product product) {
+        ModelsIsResponseDTO responseDTO = new ModelsIsResponseDTO();
         try {
-            Product newProduct = productService.addProduct(product);
-            log.info("Nouveau produit ajouté avec succès : {}", newProduct.getId());
-            return ResponseEntity.ok("Produit ajouté avec succès");
+            if (product != null && product.getProductName() != null && !product.getProductName().trim().isEmpty()) {
+                log.info("Produit ajouté avec succès");
+                Product newProduct = productRepository.save(product);
+
+                ProductDto productDto = new ProductDto();
+                productDto.setIdProduct(newProduct.getId());
+                productDto.setName(newProduct.getProductName());
+                productDto.setType(newProduct.getProductType().getType());
+                productDto.setCreatedDate(newProduct.getCreatedDate());
+                productDto.setLastModifiedDate(newProduct.getLastModifiedDate());
+
+                CustomResponse customResponse = ResponseFactory.createCustomResponse(
+                        Constants.STATUS_MESSAGE_SUCCESS_BODY,
+                        Constants.STATUS_VALUE_OK,
+                        "Produit ajouté avec succès",
+                        productDto
+                );
+
+                Map<String, CustomResponse> resultMap = new HashMap<>();
+                resultMap.put("result", customResponse);
+
+                responseDTO.setModelsis(resultMap);
+            } else {
+                log.error("Le nom du produit est requis ou le produit à ajouter est null");
+                CustomResponse errorResponse = ResponseFactory.createCustomResponse(
+                        Constants.STATUS_MESSAGE_NOT_FOUND_BODY,
+                        Constants.STATUS_VALUE_BAD_REQUEST,
+                        "Le nom du produit est requis ou le produit à ajouter est null",
+                        null
+                );
+
+                Map<String, CustomResponse> resultMap = new HashMap<>();
+                resultMap.put("result", errorResponse);
+
+                responseDTO.setModelsis(resultMap);
+            }
         } catch (Exception ex) {
             log.error("Erreur lors de l'ajout du produit : {}", ex.toString());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            CustomResponse errorResponse = ResponseFactory.createCustomResponse(
+                    Constants.STATUS_MESSAGE_NOT_FOUND_BODY,
+                    Constants.STATUS_VALUE_BAD_REQUEST,
+                    "Erreur lors de l'ajout du produit : " + ex.toString(),
+                    null
+            );
+
+            Map<String, CustomResponse> resultMap = new HashMap<>();
+            resultMap.put("result", errorResponse);
+
+            responseDTO.setModelsis(resultMap);
         }
+        return responseDTO;
+    }*/
+
+    @PostMapping
+    public ModelsIsResponseDTO addProduct(@RequestBody Product product) {
+        ModelsIsResponseDTO responseDTO = new ModelsIsResponseDTO();
+        try {
+            Product newProduct = productService.addProduct(product);
+
+            ProductDto productDto = new ProductDto();
+            productDto.setIdProduct(newProduct.getId());
+            productDto.setName(newProduct.getProductName());
+            productDto.setType(newProduct.getProductType().getType());
+            productDto.setCreatedDate(newProduct.getCreatedDate());
+            productDto.setLastModifiedDate(newProduct.getLastModifiedDate());
+
+            CustomResponse customResponse = ResponseFactory.createCustomResponse(
+                    Constants.STATUS_MESSAGE_SUCCESS_BODY,
+                    Constants.STATUS_VALUE_OK,
+                    "Produit ajouté avec succès",
+                    productDto
+            );
+
+            resultMap = new HashMap<>();
+            resultMap.put("result", customResponse);
+            responseDTO.setModelsis(resultMap);
+
+            log.info("Produit ajouté avec succès : {}", newProduct.getId());
+        } catch (Exception ex) {
+            CustomResponse errorResponse = ResponseFactory.createCustomResponse(
+                    Constants.STATUS_MESSAGE_NOT_FOUND_BODY,
+                    Constants.STATUS_VALUE_BAD_REQUEST,
+                    "Erreur lors de l'ajout du produit : " + ex.toString(),
+                    null
+            );
+
+            resultMap = new HashMap<>();
+            resultMap.put("result", errorResponse);
+            responseDTO.setModelsis(resultMap);
+
+            log.error("Erreur lors de l'ajout du produit : {}", ex.getMessage());
+        }
+        return responseDTO;
     }
+
+
+
 
 
     @PutMapping
