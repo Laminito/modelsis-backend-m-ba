@@ -23,6 +23,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/product")
 @Slf4j
+@CrossOrigin("*")
 public class ProductController {
 
     @Autowired
