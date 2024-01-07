@@ -71,14 +71,14 @@ public class ProductControllerTest {
         when(productService.addProduct(product)).thenReturn(product);
 
         // Appelez la méthode à tester
-        ResponseEntity<String> response = productController.addProduct(product);
+        ModelsIsResponseDTO response = productController.addProduct(product);
 
         // Vérifiez si le service a été appelé une fois avec le bon produit
         verify(productService, times(1)).addProduct(product);
 
         // Vérifiez si la réponse est conforme aux attentes
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("Produit ajouté avec succès", response.getBody());
+        assertEquals(HttpStatus.OK, response.getModelsis().get(response).getStatusCode());
+        assertEquals("Produit ajouté avec succès", response.getModelsis().get(response).getData());
     }
 
     @Test
