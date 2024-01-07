@@ -18,8 +18,4 @@ public interface ProductTypeRepository extends CrudRepository<ProductType,String
 
     Optional<ProductType> findByType(String type);
 
-    @Modifying
-    @Query("UPDATE ProductType pt SET pt.type = :type WHERE pt.id = :productTypeId")
-    ProductType updateProductType(@Param("productTypeId") String productTypeId, @Param("type") String type);
-
 }
