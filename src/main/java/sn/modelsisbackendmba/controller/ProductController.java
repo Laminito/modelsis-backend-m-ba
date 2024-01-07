@@ -32,9 +32,6 @@ public class ProductController {
     //Pour les Tests
     @Autowired
     private ProductRepository productRepository;
-  /*  public void setProductRepository(ProductRepository productRepository) {
-        this.productRepository=productRepository;
-    }*/
 
     private Map<String, CustomResponse> resultMap;
     public void setProductService(ProductService productService) {
