@@ -10,4 +10,6 @@ import lombok.Setter;
 public class ProductTypeDto {
     public Object type;
     public String idTypeProduct;
+    public Object createdDate;
+    public Object lastModifiedDate;
 }

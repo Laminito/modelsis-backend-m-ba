@@ -20,8 +20,4 @@ public interface ProductRepository extends CrudRepository<Product,String > {
     @Query("SELECT p FROM Product p WHERE p.active = true")
     List<Product> findAllActiveProducts();
 
-    @Modifying
-    @Query("UPDATE Product p SET p.productName = :productName, p.productType = :productType WHERE p.id = :productId")
-    Product updateProduct(@Param("productId") String productId, @Param("productName") String productName, @Param("productType") ProductType productType);
-
 }

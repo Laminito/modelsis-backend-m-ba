@@ -12,9 +12,11 @@ import sn.modelsisbackendmba.dto.ModelsIsResponseDTO;
 import sn.modelsisbackendmba.dto.ProductDto;
 import sn.modelsisbackendmba.model.Product;
 import sn.modelsisbackendmba.model.ProductType;
+import sn.modelsisbackendmba.response.CustomResponse;
 import sn.modelsisbackendmba.service.ProductService;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -81,6 +83,7 @@ public class ProductControllerTest {
         assertEquals("Produit ajouté avec succès", response.getModelsis().get(response).getData());
     }
 
+/*
     @Test
     public void testUpdateProduct() {
         // Créez un mock du service ProductService
@@ -104,24 +107,84 @@ public class ProductControllerTest {
         verify(productService, times(1)).updateProduct(product);
 
 
-        assertEquals(HttpStatus.OK, response.getModelsis().get(response).getStatusCode());
-        assertNotNull(response.getModelsis().get(response).getData());    }
+        assertEquals("Success", response.getModelsis().get(response).getStatus());
+        assertNotNull(response.getModelsis().get(response).getData());
+    }
+*/
+@Test
+public void testUpdateProduct() {
+    // Création d'un produit pour le test
+    Product product = new Product();
+    product.setId("8e3dd8b2-8d50-4bc3-9007-77070a42fa55");
+    product.setProductName("SamsungPlus");
+    product.setProductType(new ProductType("23cb1653-5373-469a-a199-2451b1a895c9"));
+
+    // Mock du service ProductService
+    ProductService productService = mock(ProductService.class);
+
+    // Simulation de la mise à jour du produit
+    when(productService.updateProduct(any(Product.class))).thenReturn(product);
+
+    // Initialisation du contrôleur avec le mock du service ProductService
+    ProductController productController = new ProductController();
+    productController.setProductService(productService);
+
+    // Appel de la méthode à tester
+    ModelsIsResponseDTO response = productController.updateProduct(product);
+
+    // Vérification de l'appel de la méthode updateProduct du service
+    verify(productService, times(1)).updateProduct(product);
+
+    // Vérification de la non-nullité de la réponse
+    assertNotNull(response);
+
+    // Vérification de la propriété "modelsis" dans la réponse
+    Map<String, CustomResponse> modelsis = response.getModelsis();
+    assertNotNull(modelsis);
+
+    // Vérification de la propriété "result" dans "modelsis"
+    CustomResponse customResponse = modelsis.get("result");
+    assertNotNull(customResponse);
+
+    // Vérification de la propriété "status" dans "customResponse"
+    assertEquals("Success", customResponse.getStatus());
+
+    // Vérification que la propriété "data" dans "customResponse" est non null
+    assertNotNull(customResponse.getData());
+}
+
+
 
     @Test
     public void testDeleteProduct() {
         String productId = "8e3dd8b2-8d50-4bc3-9007-77070a42fa55"; // ID existant pour le test
 
         ProductService productService = mock(ProductService.class);
+        // Simulation de la suppression d'un produit
+        doNothing().when(productService).deleteProduct(productId);
 
         ProductController productController = new ProductController();
         productController.setProductService(productService);
 
         ModelsIsResponseDTO response = productController.deleteProduct(productId);
 
+        // Vérifier si la méthode de suppression du produit a été appelée
         verify(productService, times(1)).deleteProduct(productId);
 
-        assertEquals(HttpStatus.NO_CONTENT, response.getModelsis().get(response).getStatus());
-        assertNull(response.getModelsis().get(response).getData());
+        // Vérifier que la réponse n'est pas null
+        assertNotNull(response); // Vérifier que la réponse n'est pas null
+
+        Map<String, CustomResponse> modelsis = response.getModelsis();
+        // Vérifier que modelsis n'est pas null
+        assertNotNull(modelsis);
+
+        CustomResponse customResponse = modelsis.get("result");
+        assertNotNull(customResponse); // Vérifier que customResponse n'est pas null
+
+        // Vérifier la propriété status de customResponse
+        assertEquals("Success", customResponse.getStatus());
+        assertNull(customResponse.getData());
     }
+
 
 }

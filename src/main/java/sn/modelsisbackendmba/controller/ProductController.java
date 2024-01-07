@@ -23,7 +23,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/product")
 @Slf4j
-@CrossOrigin("*")
 public class ProductController {
 
     @Autowired
@@ -57,7 +56,6 @@ public class ProductController {
                 productDto.setCreatedDate(product.getCreatedDate());
                 productDtos.add(productDto);
             }
-            log.info("productDtos : {} ",productDtos);
 
             CustomResponse customResponse = ResponseFactory.createCustomResponse(
                     Constants.STATUS_MESSAGE_SUCCESS_BODY,
@@ -68,7 +66,6 @@ public class ProductController {
             resultMap = new HashMap<>();
             resultMap.put("result", customResponse);
             responseDTO.setModelsis(resultMap);
-            log.info("Récupération de la liste des produits réussie avec succès");
         }
         catch (DataAccessException ex) {
             CustomResponse errorResponse = ResponseFactory.createCustomResponse(
@@ -96,6 +93,7 @@ public class ProductController {
             responseDTO.setModelsis(resultMap);
             log.error("Une erreur s'est produite lors de la récupération de la liste des produits : " + ex.toString());
         }
+        log.info("Récupération de la liste des produits réussie avec succès");
         return responseDTO;
     }
 
@@ -166,63 +164,6 @@ public class ProductController {
         return responseDTO;
     }
 
-/*    @PostMapping
-    public ModelsIsResponseDTO addProduct(@RequestBody Product product) {
-        ModelsIsResponseDTO responseDTO = new ModelsIsResponseDTO();
-        try {
-            if (product != null && product.getProductName() != null && !product.getProductName().trim().isEmpty()) {
-                log.info("Produit ajouté avec succès");
-                Product newProduct = productRepository.save(product);
-
-                ProductDto productDto = new ProductDto();
-                productDto.setIdProduct(newProduct.getId());
-                productDto.setName(newProduct.getProductName());
-                productDto.setType(newProduct.getProductType().getType());
-                productDto.setCreatedDate(newProduct.getCreatedDate());
-                productDto.setLastModifiedDate(newProduct.getLastModifiedDate());
-
-                CustomResponse customResponse = ResponseFactory.createCustomResponse(
-                        Constants.STATUS_MESSAGE_SUCCESS_BODY,
-                        Constants.STATUS_VALUE_OK,
-                        "Produit ajouté avec succès",
-                        productDto
-                );
-
-                Map<String, CustomResponse> resultMap = new HashMap<>();
-                resultMap.put("result", customResponse);
-
-                responseDTO.setModelsis(resultMap);
-            } else {
-                log.error("Le nom du produit est requis ou le produit à ajouter est null");
-                CustomResponse errorResponse = ResponseFactory.createCustomResponse(
-                        Constants.STATUS_MESSAGE_NOT_FOUND_BODY,
-                        Constants.STATUS_VALUE_BAD_REQUEST,
-                        "Le nom du produit est requis ou le produit à ajouter est null",
-                        null
-                );
-
-                Map<String, CustomResponse> resultMap = new HashMap<>();
-                resultMap.put("result", errorResponse);
-
-                responseDTO.setModelsis(resultMap);
-            }
-        } catch (Exception ex) {
-            log.error("Erreur lors de l'ajout du produit : {}", ex.toString());
-            CustomResponse errorResponse = ResponseFactory.createCustomResponse(
-                    Constants.STATUS_MESSAGE_NOT_FOUND_BODY,
-                    Constants.STATUS_VALUE_BAD_REQUEST,
-                    "Erreur lors de l'ajout du produit : " + ex.toString(),
-                    null
-            );
-
-            Map<String, CustomResponse> resultMap = new HashMap<>();
-            resultMap.put("result", errorResponse);
-
-            responseDTO.setModelsis(resultMap);
-        }
-        return responseDTO;
-    }*/
-
     @PostMapping
     public ModelsIsResponseDTO addProduct(@RequestBody Product product) {
         ModelsIsResponseDTO responseDTO = new ModelsIsResponseDTO();
@@ -247,7 +188,7 @@ public class ProductController {
             resultMap.put("result", customResponse);
             responseDTO.setModelsis(resultMap);
 
-            log.info("Produit ajouté avec succès : {}", newProduct.getId());
+            log.info("Produit ajouté avec succès : {}", newProduct.toString());
         } catch (Exception ex) {
             CustomResponse errorResponse = ResponseFactory.createCustomResponse(
                     Constants.STATUS_MESSAGE_NOT_FOUND_BODY,
@@ -260,14 +201,10 @@ public class ProductController {
             resultMap.put("result", errorResponse);
             responseDTO.setModelsis(resultMap);
 
-            log.error("Erreur lors de l'ajout du produit : {}", ex.getMessage());
+            log.error("Erreur lors de l'ajout du produit : {}", ex.toString());
         }
         return responseDTO;
     }
-
-
-
-
 
     @PutMapping
     public ModelsIsResponseDTO updateProduct(@RequestBody Product product) {
@@ -280,7 +217,7 @@ public class ProductController {
             productDto.setType(updatedProduct.getProductType().getType());
             productDto.setLastModifiedDate(updatedProduct.getLastModifiedDate());
 
-            log.info("Produit mis à jour avec succès : {}", updatedProduct.getId());
+            log.info("Produit mis à jour avec succès : {}", updatedProduct.toString());
 
             CustomResponse customResponse = ResponseFactory.createCustomResponse(
                     Constants.STATUS_MESSAGE_SUCCESS_BODY,
@@ -296,14 +233,14 @@ public class ProductController {
             CustomResponse errorResponse = ResponseFactory.createCustomResponse(
                     Constants.STATUS_MESSAGE_NOT_FOUND_BODY,
                     Constants.STATUS_VALUE_BAD_REQUEST,
-                    "Erreur de base de données lors de la mise à jour du produit : " + ex.getMessage(),
+                    "Erreur de base de données lors de la mise à jour du produit : " + ex.toString(),
                     null
             );
 
             resultMap = new HashMap<>();
             resultMap.put("result", errorResponse);
             responseDTO.setModelsis(resultMap);
-            log.error("Erreur de base de données lors de la mise à jour du produit : " + ex.getMessage());
+            log.error("Erreur de base de données lors de la mise à jour du produit : " + ex.toString());
         } catch (Exception ex) {
             CustomResponse errorResponse = ResponseFactory.createCustomResponse(
                     Constants.STATUS_MESSAGE_NOT_FOUND_BODY,
@@ -339,13 +276,13 @@ public class ProductController {
             CustomResponse errorResponse = ResponseFactory.createCustomResponse(
                     Constants.STATUS_MESSAGE_NOT_FOUND_BODY,
                     Constants.STATUS_VALUE_BAD_REQUEST,
-                    "Erreur lors de la suppression du produit : " + ex.getMessage(),
+                    "Erreur lors de la suppression du produit : " + ex.toString(),
                     null
             );
             resultMap = new HashMap<>();
             resultMap.put("result", errorResponse);
             responseDTO.setModelsis(resultMap);
-            log.error("Erreur lors de la suppression du produit : {}", ex.getMessage());
+            log.error("Erreur lors de la suppression du produit : {}", ex.toString());
         }
         return responseDTO;
     }

@@ -24,6 +24,10 @@ public class ProductTypeService {
                 if (productType.getType() == null || productType.getType().trim().isEmpty()) {
                     throw new IllegalArgumentException("Le nom du type de produit est requis.");
                 }
+                Optional<ProductType> existingByType= productTypeRepository.findByType(productType.getType());
+                if(existingByType.isPresent()){
+                    throw new IllegalArgumentException("Ce type de produit existe deja .");
+                }
                 return productTypeRepository.save(productType);
             } else {
                 throw new IllegalArgumentException("Le type de produit à ajouter est null.");
@@ -56,24 +60,36 @@ public class ProductTypeService {
         return result;
     }
 
-    public ProductType updateProductTypes(ProductType product) {
+    public ProductType updateProductType(ProductType productType) {
         try {
-            String productId = product.getId();
-            Optional<ProductType> existingProductType = productTypeRepository.findByType(product.getType());
-            if(!existingProductType.isPresent()){
-                log.error("Le  produit avec le type "+product.getType()+" n'existe pas");
-                throw new IllegalArgumentException("Le produit avec le type "+product.getType()+"n'existe pas");
+            String productTypeId = productType.getId();
+            Optional<ProductType> existingProductType = productTypeRepository.findById(productTypeId);
+
+            if (!existingProductType.isPresent()) {
+                log.error("Le type de produit avec l'ID " + productTypeId + " n'existe pas");
+                throw new IllegalArgumentException("Le type de produit avec l'ID " + productTypeId + " n'existe pas");
             }
-            Optional<ProductType> existingProduct = productTypeRepository.findById(existingProductType.get().getId());
-            if(!existingProduct.isPresent()){
-                log.error("Le produit avec l'id "+productId+" n'existe pas");
-                throw new IllegalArgumentException("Le le type de produit avec l'id "+productId+"n'existe pas");
-            }
-            ProductType productResult = existingProduct.get();
-            return productTypeRepository.updateProductType(productResult.getId(),productResult.getType());
+
+            ProductType productTypeToUpdate = existingProductType.get();
+            productTypeToUpdate.setType(productType.getType());
+
+            // Enregistrer les modifications dans la base de données
+            return productTypeRepository.save(productTypeToUpdate);
         } catch (Exception ex) {
-            log.info("Une erreur est survenue lors de la mise à jour du type de produit : " + ex.toString());
+            log.error("Une erreur est survenue lors de la mise à jour du type de produit : " + ex.toString());
             throw new IllegalArgumentException("Erreur de validation lors de la mise à jour du type de produit");
         }
     }
+
+
+    public ProductType findProductTypeById(String productTypeId) {
+        try {
+            return productTypeRepository.findById(productTypeId)
+                    .orElse(null);
+        } catch (Exception ex) {
+            log.error("Une erreur s'est produite lors de la récupération du type de produit par ID : {}", ex.getMessage());
+            throw new IllegalArgumentException("Erreur lors de la récupération du type de produit par ID", ex);
+        }
+    }
+
 }
