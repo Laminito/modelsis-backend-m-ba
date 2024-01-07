@@ -19,6 +19,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/product-type")
 @Slf4j
+@CrossOrigin("*")
 public class ProductTypeController {
 
     @Autowired
@@ -106,6 +107,59 @@ public class ProductTypeController {
                 resultMap.put("result", errorResponse);
                 responseDTO.setModelsis(resultMap);
                 log.error("Aucun type de produit trouvé avec l'ID : {} ", productTypeId);
+            }
+        } catch (Exception ex) {
+            CustomResponse errorResponse = ResponseFactory.createCustomResponse(
+                    Constants.STATUS_MESSAGE_NOT_FOUND_BODY,
+                    Constants.STATUS_VALUE_BAD_REQUEST,
+                    "Erreur lors de la récupération du type de produit : " + ex.toString(),
+                    null
+            );
+
+            resultMap = new HashMap<>();
+            resultMap.put("result", errorResponse);
+            responseDTO.setModelsis(resultMap);
+            log.error("Erreur lors de la récupération du type de produit : {}", ex.toString());
+        }
+        return responseDTO;
+    }
+    @GetMapping("/type/{productType}")
+    public ModelsIsResponseDTO getByProductType(@PathVariable String productType) {
+        ModelsIsResponseDTO responseDTO = new ModelsIsResponseDTO();
+        try {
+            ProductType productTypes = productTypeService.getByProductType(productType);
+
+            if (productTypes != null) {
+                ProductTypeDto productTypeDto = new ProductTypeDto();
+                productTypeDto.setIdTypeProduct(productTypes.getId());
+                productTypeDto.setType(productTypes.getType());
+                productTypeDto.setCreatedDate(productTypes.getCreatedDate());
+                productTypeDto.setLastModifiedDate(productTypes.getLastModifiedDate());
+
+
+                CustomResponse customResponse = ResponseFactory.createCustomResponse(
+                        Constants.STATUS_MESSAGE_SUCCESS_BODY,
+                        Constants.STATUS_VALUE_OK,
+                        "Récupération du type de produit réussie",
+                        productTypeDto
+                );
+
+                Map<String, CustomResponse> resultMap = new HashMap<>();
+                resultMap.put("result", customResponse);
+                responseDTO.setModelsis(resultMap);
+                log.info("Récupération du type de produit réussie : {} ",productTypeDto);
+            } else {
+                CustomResponse errorResponse = ResponseFactory.createCustomResponse(
+                        Constants.STATUS_MESSAGE_NOT_FOUND_BODY,
+                        Constants.STATUS_VALUE_BAD_REQUEST,
+                        "Aucun type de produit trouvé avec cette categorie: " + productType,
+                        null
+                );
+
+                resultMap = new HashMap<>();
+                resultMap.put("result", errorResponse);
+                responseDTO.setModelsis(resultMap);
+                log.error("Aucun type de produit trouvé avec cette categorie:: {} ", productType);
             }
         } catch (Exception ex) {
             CustomResponse errorResponse = ResponseFactory.createCustomResponse(

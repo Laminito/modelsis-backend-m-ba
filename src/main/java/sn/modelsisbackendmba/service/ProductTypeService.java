@@ -17,7 +17,6 @@ public class ProductTypeService {
     @Autowired
     private ProductTypeRepository productTypeRepository;
 
-
     public ProductType addProductType(ProductType productType) {
         try {
             if (productType != null) {
@@ -81,7 +80,6 @@ public class ProductTypeService {
         }
     }
 
-
     public ProductType findProductTypeById(String productTypeId) {
         try {
             return productTypeRepository.findById(productTypeId)
@@ -89,6 +87,16 @@ public class ProductTypeService {
         } catch (Exception ex) {
             log.error("Une erreur s'est produite lors de la récupération du type de produit par ID : {}", ex.getMessage());
             throw new IllegalArgumentException("Erreur lors de la récupération du type de produit par ID", ex);
+        }
+    }
+
+    public ProductType getByProductType(String productType) {
+        try {
+        return productTypeRepository.findByType(productType)
+                .orElse(null);
+        } catch (Exception ex) {
+            log.error("Une erreur s'est produite lors de la récupération du type de produit  : {}", ex.toString());
+            throw new IllegalArgumentException("Erreur lors de la récupération du type de produit ", ex);
         }
     }
 
