@@ -141,8 +141,8 @@ public class ProductTypeController {
                 resultMap = new HashMap<>();
                 resultMap.put("result", customResponse);
                 responseDTO.setModelsis(resultMap);
-                log.info("Récupération du type de produit réussie : {} ",responseDTO.getModelsis().get(responseDTO).getData());
-
+                log.info("Récupération du type de produit réussie ");
+                return responseDTO;
         }
         catch (DataAccessException ex) {
             CustomResponse errorResponse = ResponseFactory.createCustomResponse(
@@ -190,7 +190,7 @@ public class ProductTypeController {
                 resultMap = new HashMap<>();
                 resultMap.put("result", errorResponse);
                 responseDTO.setModelsis(resultMap);
-                log.error("Aucun type de produit trouvé avec cette categorie:: {} ", responseDTO.getModelsis().get(responseDTO).getData());
+                log.error("Aucun type de produit trouvé avec cette categorie ");
 
             }
                 ProductTypeDto productTypeDto = new ProductTypeDto();
@@ -210,7 +210,7 @@ public class ProductTypeController {
                 Map<String, CustomResponse> resultMap = new HashMap<>();
                 resultMap.put("result", customResponse);
                 responseDTO.setModelsis(resultMap);
-                log.info("Récupération du type de produit réussie : {} ",responseDTO.getModelsis().get(responseDTO).getData());
+                log.info("Récupération du type de produit réussie ");
 
         }
         catch (DataAccessException ex) {
@@ -403,7 +403,7 @@ public class ProductTypeController {
             resultMap = new HashMap<>();
             resultMap.put("result", errorResponse);
             responseDTO.setModelsis(resultMap);
-            log.error("Erreur de base de données lors de l'ajout d'un nouveau type de produit : {} ",responseDTO.getModelsis().get(responseDTO).getData());
+            log.error("Erreur de base de données lors de l'ajout d'un nouveau type de produit ");
         }
         catch (Exception ex) {
             CustomResponse errorResponse = ResponseFactory.createCustomResponse(
