@@ -4,7 +4,7 @@
 Ce projet est une application backend développée en Java 11 avec Spring Boot. Il gère les entités Product et ProductType avec des opérations CRUD via des API RESTful.
 
 ## Stack utilisée
-- Java 11
+- Java 17
 - Spring Boot 2.7 ou supérieur
 - Spring Rest
 - Spring Data JPA
