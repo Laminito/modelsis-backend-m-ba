@@ -12,32 +12,37 @@ Ce projet est une application backend développée en Java 11 avec Spring Boot. 
 - PostgreSQL 14
 - Lombok (pas de getters et setters)
 
-## Comment exécuter
-1. Cloner le dépôt depuis GitHub : `git clone <lien-du-repo>`
-2. Configurer les paramètres de connexion à la base de données dans `application.properties` ou via des variables d'environnement.
-3. Exécuter la commande Maven pour démarrer l'application : `mvn spring-boot:run`
-
-## Respect du standard HTTP pour les codes d’erreur
-Les réponses HTTP suivent les standards : 
-- 200 : Succès
-- 404 : Ressource non trouvée
-- 400 : Requête invalide
-- 500 : Erreur serveur
-
-## Paramètres de connexion à la base de données
-Les paramètres de connexion à la base de données ne sont pas hardcodés mais configurés dans `application.properties` ou via des variables d'environnement.
-
-## Validation des champs de saisie
-Les validations des champs sont effectuées selon les critères suivants :
-- Product Type : Unique et obligatoire
-- Product Name : Unique et obligatoire
-
-## API RESTful
-Les endpoints et leurs descriptions :
-- GET /product : Retourne un tableau de Produits
-- POST /product : Insère un nouveau produit
-- POST /productType : Insère un nouveau Type de Produit
-- PUT /product : Met à jour un Produit
-
 ## Base Url par defaut(/api/modelsis)
 Ex : localhost:port/api/modelsis/...
+
+# Description des API du ProductController
+
+Ce contrôleur offre des fonctionnalités pour la gestion des produits.
+
+## Liste des API
+
+### 1. GET /product
+- Récupère tous les produits.
+- Retourne une liste de produits avec leurs détails.
+
+### 2. GET /product/{productId}
+- Récupère un produit spécifique par son ID.
+- Retourne les détails du produit correspondant à l'ID fourni.
+
+### 3. POST /product
+- Ajoute un nouveau produit.
+- Requiert les détails du produit à ajouter dans le corps de la requête.
+- Retourne les détails du produit ajouté.
+
+### 4. PUT /product
+- Met à jour un produit existant.
+- Requiert les détails du produit mis à jour dans le corps de la requête.
+- Retourne les détails du produit mis à jour.
+
+### 5. DELETE /product/{productId}
+- Supprime un produit par son ID.
+- Ne retourne aucun contenu, juste un statut de succès ou d'échec.
+
+## Remarque
+Assurez-vous d'utiliser les bons endpoints avec les méthodes HTTP appropriées pour interagir avec les fonctionnalités de gestion des produits.
+
