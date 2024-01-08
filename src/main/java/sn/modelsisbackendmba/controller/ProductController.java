@@ -51,7 +51,7 @@ public class ProductController {
                 resultMap = new HashMap<>();
                 resultMap.put("result", errorResponse);
                 responseDTO.setModelsis(resultMap);
-                log.error("La liste des produits et soit vide ou null : {} ",responseDTO.getModelsis().get(responseDTO).getData());
+                log.error("La liste des produits et soit vide ou null ");
                 return responseDTO;
 
             }
@@ -151,26 +151,26 @@ public class ProductController {
             CustomResponse errorResponse = ResponseFactory.createCustomResponse(
                     Constants.STATUS_MESSAGE_NOT_FOUND_BODY,
                     Constants.STATUS_VALUE_BAD_REQUEST,
-                    "Erreur de base de données lors de la récupération du produit : " + ex.getMessage(),
+                    "Erreur de base de données lors de la récupération du produit : " + ex.toString(),
                     null
             );
 
             resultMap = new HashMap<>();
             resultMap.put("result", errorResponse);
             responseDTO.setModelsis(resultMap);
-            log.error("Erreur de base de données lors de la récupération du produit : " + ex.getMessage());
+            log.error("Erreur de base de données lors de la récupération du produit : " + ex.toString());
         } catch (Exception ex) {
             CustomResponse errorResponse = ResponseFactory.createCustomResponse(
                     Constants.STATUS_MESSAGE_NOT_FOUND_BODY,
                     Constants.STATUS_VALUE_BAD_REQUEST,
-                    "Une erreur s'est produite lors de la récupération du produit : " + ex.getMessage(),
+                    "Une erreur s'est produite lors de la récupération du produit : " + ex.toString(),
                     null
             );
 
             resultMap = new HashMap<>();
             resultMap.put("result", errorResponse);
             responseDTO.setModelsis(resultMap);
-            log.error("Une erreur s'est produite lors de la récupération du produit : " + ex.getMessage());
+            log.error("Une erreur s'est produite lors de la récupération du produit : " + ex.toString());
         }
         return responseDTO;
     }
@@ -220,7 +220,7 @@ public class ProductController {
             CustomResponse errorResponse = ResponseFactory.createCustomResponse(
                     Constants.STATUS_MESSAGE_NOT_FOUND_BODY,
                     Constants.STATUS_VALUE_BAD_REQUEST,
-                    "Erreur de base de données lors de l'ajout d'un nouveau produit : " + ex.getMessage(),
+                    "Erreur de base de données lors de l'ajout d'un nouveau produit : " + ex.toString(),
                     null
             );
 
@@ -262,7 +262,7 @@ public class ProductController {
                 resultMap = new HashMap<>();
                 resultMap.put("result", errorResponse);
                 responseDTO.setModelsis(resultMap);
-                log.error("La mise à jour du produit à echoué: {} ",responseDTO.getModelsis().get(responseDTO).getData());
+                log.error("La mise à jour du produit à echoué ");
                 return responseDTO;
             }
             ProductDto productDto = new ProductDto();
@@ -271,7 +271,7 @@ public class ProductController {
             productDto.setType(updatedProduct.getProductType().getType());
             productDto.setLastModifiedDate(updatedProduct.getLastModifiedDate());
 
-            log.info("Produit mis à jour avec succès : {}", updatedProduct.toString());
+            log.info("Produit mis à jour avec succès ");
 
             CustomResponse customResponse = ResponseFactory.createCustomResponse(
                     Constants.STATUS_MESSAGE_SUCCESS_BODY,
