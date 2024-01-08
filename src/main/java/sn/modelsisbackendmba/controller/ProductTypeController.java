@@ -100,7 +100,7 @@ public class ProductTypeController {
             resultMap = new HashMap<>();
             resultMap.put("result", errorResponse);
             responseDTO.setModelsis(resultMap);
-            log.error("Erreur lors de la récupération des types de produits : {}", ex.toString());
+            log.error("Erreur lors de la récupération des types de produits  : {}", ex.toString());
         }
         return responseDTO;
     }
