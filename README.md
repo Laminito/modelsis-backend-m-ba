@@ -74,3 +74,35 @@ Ce contrôleur offre des fonctionnalités pour la gestion des types de produits.
 ### 6. DELETE /product-type/{productTypeId}
 - Supprime un type de produit par son ID.
 - Ne retourne aucun contenu, juste un statut de succès ou d'échec.
+
+# Tests pour le contrôleur de produits
+
+## Ce référentiel contient des tests unitaires pour le contrôleur de produits de l'application ModelsIsBackendMBA. Ces tests sont écrits en utilisant JUnit 5 et Mockito pour simuler le comportement du service de produits.
+### Structure des tests
+
+    ProductControllerTest : Cette classe contient plusieurs méthodes de test pour tester différentes fonctionnalités du contrôleur de produits.
+
+### Prérequis
+
+    Java 8 ou supérieur
+    Maven pour l'exécution des tests
+
+### Exécution des tests
+
+    Cloner ce référentiel sur votre machine locale.
+    Exécuter mvn test dans le répertoire racine pour lancer les tests.
+
+### Détails des tests
+
+    testGetAllProducts : Vérifie la récupération de tous les produits et la structure de la réponse.
+    testGetAllProducts_EmptyList : Vérifie la réponse lorsque la liste de produits est vide.
+    testAddProduct : Vérifie l'ajout d'un produit et la structure de la réponse.
+    testAddProduct_Failure : Vérifie la réponse en cas d'échec de l'ajout d'un produit.
+    testUpdateProduct : Vérifie la mise à jour d'un produit et la structure de la réponse.
+    testUpdateProduct_Failure : Vérifie la réponse en cas d'échec de la mise à jour d'un produit.
+    testDeleteProduct : Vérifie la suppression d'un produit et la structure de la réponse.
+    testDeleteProduct_Failure : Vérifie la réponse en cas d'échec de la suppression d'un produit.
+    testGetProductById : Vérifie la récupération d'un produit par son ID et la structure de la réponse.
+    testGetProductById_Failure : Vérifie la réponse en cas d'échec de la récupération d'un produit par son ID.
+
+Chaque test a été conçu pour vérifier un scénario spécifique et s'assurer du bon fonctionnement du contrôleur de produits.
