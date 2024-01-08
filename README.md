@@ -43,6 +43,34 @@ Ce contrôleur offre des fonctionnalités pour la gestion des produits.
 - Supprime un produit par son ID.
 - Ne retourne aucun contenu, juste un statut de succès ou d'échec.
 
-## Remarque
-Assurez-vous d'utiliser les bons endpoints avec les méthodes HTTP appropriées pour interagir avec les fonctionnalités de gestion des produits.
+# Description des API du ProductTypeController
 
+Ce contrôleur offre des fonctionnalités pour la gestion des types de produits.
+
+## Liste des API
+
+### 1. GET /product-type
+- Récupère tous les types de produits.
+- Retourne une liste de tous les types de produits avec leurs détails.
+
+### 2. GET /product-type/{productTypeId}
+- Récupère un type de produit spécifique par son ID.
+- Retourne les détails du type de produit correspondant à l'ID fourni.
+
+### 3. GET /product-type/type/{productType}
+- Récupère un type de produit par son nom/categorie.
+- Retourne les détails du type de produit correspondant à la categorie fournie.
+
+### 4. POST /product-type
+- Ajoute un nouveau type de produit.
+- Requiert les détails du type de produit à ajouter dans le corps de la requête.
+- Retourne les détails du type de produit ajouté.
+
+### 5. PUT /product-type
+- Met à jour un type de produit existant.
+- Requiert les détails du type de produit mis à jour dans le corps de la requête.
+- Retourne les détails du type de produit mis à jour.
+
+### 6. DELETE /product-type/{productTypeId}
+- Supprime un type de produit par son ID.
+- Ne retourne aucun contenu, juste un statut de succès ou d'échec.
