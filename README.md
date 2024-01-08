@@ -17,7 +17,7 @@ Ex : localhost:port/api/modelsis/...
 
 # Description des API du ProductController
 
-Ce contrôleur offre des fonctionnalités pour la gestion des produits.
+### Ce contrôleur offre des fonctionnalités pour la gestion des produits.
 
 ## Liste des API
 
@@ -45,7 +45,7 @@ Ce contrôleur offre des fonctionnalités pour la gestion des produits.
 
 # Description des API du ProductTypeController
 
-Ce contrôleur offre des fonctionnalités pour la gestion des types de produits.
+### Ce contrôleur offre des fonctionnalités pour la gestion des types de produits.
 
 ## Liste des API
 
