@@ -77,7 +77,11 @@ Ce contrôleur offre des fonctionnalités pour la gestion des types de produits.
 
 # Tests pour le contrôleur de produits
 
-## Ce référentiel contient des tests unitaires pour le contrôleur de produits de l'application ModelsIsBackendMBA. Ces tests sont écrits en utilisant JUnit 5 et Mockito pour simuler le comportement du service de produits.
+## Ce référentiel contient des tests unitaires pour le contrôleur de produits de l'application ModelsIsBackendMBA. 
+
+    Ces tests sont écrits en utilisant JUnit 5 et Mockito pour simuler le comportement du service de produits.
+
+
 ### Structure des tests
 
     ProductControllerTest : Cette classe contient plusieurs méthodes de test pour tester différentes fonctionnalités du contrôleur de produits.
@@ -105,4 +109,4 @@ Ce contrôleur offre des fonctionnalités pour la gestion des types de produits.
     testGetProductById : Vérifie la récupération d'un produit par son ID et la structure de la réponse.
     testGetProductById_Failure : Vérifie la réponse en cas d'échec de la récupération d'un produit par son ID.
 
-Chaque test a été conçu pour vérifier un scénario spécifique et s'assurer du bon fonctionnement du contrôleur de produits.
+### NB : Chaque test a été conçu pour vérifier un scénario spécifique et s'assurer du bon fonctionnement du contrôleur de produits.
