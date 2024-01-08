@@ -83,7 +83,7 @@ public class ProductController {
             CustomResponse errorResponse = ResponseFactory.createCustomResponse(
                     Constants.STATUS_MESSAGE_NOT_FOUND_BODY,
                     Constants.STATUS_VALUE_BAD_REQUEST,
-                    "Erreur de base de données lors de la récupération des produits : " + ex.getMessage(),
+                    "Erreur de base de données lors de la récupération des produits : " + ex.toString(),
                     null
             );
 
