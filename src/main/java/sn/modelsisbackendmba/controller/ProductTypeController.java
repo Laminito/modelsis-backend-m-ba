@@ -2,6 +2,7 @@ package sn.modelsisbackendmba.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.annotation.*;
 import sn.modelsisbackendmba.dto.ModelsIsResponseDTO;
 import sn.modelsisbackendmba.dto.ProductTypeDto;
@@ -25,6 +26,12 @@ public class ProductTypeController {
     @Autowired
     private ProductTypeService productTypeService;
 
+    /**
+     *   Pour les  besoins des testes unitaires setProductTypeService()
+     */
+    public void setProductTypeService(ProductTypeService productTypeService) {
+        this.productTypeService = productTypeService;
+    }
     private Map<String, CustomResponse> resultMap;
 
     @GetMapping
@@ -32,6 +39,20 @@ public class ProductTypeController {
         ModelsIsResponseDTO responseDTO = new ModelsIsResponseDTO();
         try {
             List<ProductType> productTypes = productTypeService.findAllProductTypes();
+            if(productTypes.isEmpty()){
+                CustomResponse customResponse = ResponseFactory.createCustomResponse(
+                        Constants.STATUS_MESSAGE_SUCCESS_BODY,
+                        Constants.STATUS_VALUE_OK,
+                        "Récupération de tous les types de produits a echoué",
+                        productTypes
+                );
+
+                resultMap = new HashMap<>();
+                resultMap.put("result", customResponse);
+                responseDTO.setModelsis(resultMap);
+                log.info("Récupération de tous les types de produits à réussie avec succée : {} ",responseDTO.getModelsis().get(responseDTO).getData());
+                return  responseDTO;
+            }
             List<ProductTypeDto> productTypeDtos = new ArrayList<>();
             for (ProductType product : productTypes) {
                 ProductTypeDto productDto = new ProductTypeDto();
@@ -54,11 +75,25 @@ public class ProductTypeController {
             responseDTO.setModelsis(resultMap);
             log.info("Récupération de tous les types de produits à réussie avec succée : {} ",productTypeDtos);
 
-        } catch (Exception ex) {
+        }
+        catch (DataAccessException ex) {
             CustomResponse errorResponse = ResponseFactory.createCustomResponse(
                     Constants.STATUS_MESSAGE_NOT_FOUND_BODY,
                     Constants.STATUS_VALUE_BAD_REQUEST,
-                    "Erreur lors de la récupération des types de produits : " + ex.toString(),
+                    "Erreur de base de données lors de la recuperation des types de produit ",
+                    null
+            );
+
+            resultMap = new HashMap<>();
+            resultMap.put("result", errorResponse);
+            responseDTO.setModelsis(resultMap);
+            log.error("Erreur de base de données lors de la recuperation des types de produit : {} ",responseDTO.getModelsis().get(responseDTO).getData());
+        }
+        catch (Exception ex) {
+            CustomResponse errorResponse = ResponseFactory.createCustomResponse(
+                    Constants.STATUS_MESSAGE_NOT_FOUND_BODY,
+                    Constants.STATUS_VALUE_BAD_REQUEST,
+                    "Erreur lors de la récupération des types de produits ",
                     null
             );
 
@@ -76,26 +111,7 @@ public class ProductTypeController {
         try {
             ProductType productType = productTypeService.findProductTypeById(productTypeId);
 
-            if (productType != null) {
-                ProductTypeDto productTypeDto = new ProductTypeDto();
-                productTypeDto.setIdTypeProduct(productType.getId());
-                productTypeDto.setType(productType.getType());
-                productTypeDto.setCreatedDate(productType.getCreatedDate());
-                productTypeDto.setLastModifiedDate(productType.getLastModifiedDate());
-
-
-                CustomResponse customResponse = ResponseFactory.createCustomResponse(
-                        Constants.STATUS_MESSAGE_SUCCESS_BODY,
-                        Constants.STATUS_VALUE_OK,
-                        "Récupération du type de produit réussie",
-                        productTypeDto
-                );
-
-                Map<String, CustomResponse> resultMap = new HashMap<>();
-                resultMap.put("result", customResponse);
-                responseDTO.setModelsis(resultMap);
-                log.info("Récupération du type de produit réussie : {} ",productTypeDto);
-            } else {
+            if (productType == null) {
                 CustomResponse errorResponse = ResponseFactory.createCustomResponse(
                         Constants.STATUS_MESSAGE_NOT_FOUND_BODY,
                         Constants.STATUS_VALUE_BAD_REQUEST,
@@ -107,12 +123,45 @@ public class ProductTypeController {
                 resultMap.put("result", errorResponse);
                 responseDTO.setModelsis(resultMap);
                 log.error("Aucun type de produit trouvé avec l'ID : {} ", productTypeId);
+                return responseDTO;
             }
-        } catch (Exception ex) {
+                ProductTypeDto productTypeDto = new ProductTypeDto();
+                productTypeDto.setIdTypeProduct(productType.getId());
+                productTypeDto.setType(productType.getType());
+                productTypeDto.setCreatedDate(productType.getCreatedDate());
+                productTypeDto.setLastModifiedDate(productType.getLastModifiedDate());
+
+                CustomResponse customResponse = ResponseFactory.createCustomResponse(
+                        Constants.STATUS_MESSAGE_SUCCESS_BODY,
+                        Constants.STATUS_VALUE_OK,
+                        "Récupération du type de produit réussie",
+                        productTypeDto
+                );
+
+                resultMap = new HashMap<>();
+                resultMap.put("result", customResponse);
+                responseDTO.setModelsis(resultMap);
+                log.info("Récupération du type de produit réussie : {} ",responseDTO.getModelsis().get(responseDTO).getData());
+
+        }
+        catch (DataAccessException ex) {
             CustomResponse errorResponse = ResponseFactory.createCustomResponse(
                     Constants.STATUS_MESSAGE_NOT_FOUND_BODY,
                     Constants.STATUS_VALUE_BAD_REQUEST,
-                    "Erreur lors de la récupération du type de produit : " + ex.toString(),
+                    "Erreur de base de données lors de la récupération du type de produit ",
+                    null
+            );
+
+            resultMap = new HashMap<>();
+            resultMap.put("result", errorResponse);
+            responseDTO.setModelsis(resultMap);
+            log.error("Erreur de base de données lors de la récupération du type de produit : " + ex.toString());
+        }
+        catch (Exception ex) {
+            CustomResponse errorResponse = ResponseFactory.createCustomResponse(
+                    Constants.STATUS_MESSAGE_NOT_FOUND_BODY,
+                    Constants.STATUS_VALUE_BAD_REQUEST,
+                    "Erreur lors de la récupération du type de produit ",
                     null
             );
 
@@ -123,13 +172,27 @@ public class ProductTypeController {
         }
         return responseDTO;
     }
+
     @GetMapping("/type/{productType}")
     public ModelsIsResponseDTO getByProductType(@PathVariable String productType) {
         ModelsIsResponseDTO responseDTO = new ModelsIsResponseDTO();
         try {
             ProductType productTypes = productTypeService.getByProductType(productType);
 
-            if (productTypes != null) {
+            if (productTypes == null) {
+                CustomResponse errorResponse = ResponseFactory.createCustomResponse(
+                        Constants.STATUS_MESSAGE_NOT_FOUND_BODY,
+                        Constants.STATUS_VALUE_BAD_REQUEST,
+                        "Aucun type de produit trouvé avec cette categorie ",
+                        null
+                );
+
+                resultMap = new HashMap<>();
+                resultMap.put("result", errorResponse);
+                responseDTO.setModelsis(resultMap);
+                log.error("Aucun type de produit trouvé avec cette categorie:: {} ", responseDTO.getModelsis().get(responseDTO).getData());
+
+            }
                 ProductTypeDto productTypeDto = new ProductTypeDto();
                 productTypeDto.setIdTypeProduct(productTypes.getId());
                 productTypeDto.setType(productTypes.getType());
@@ -147,25 +210,27 @@ public class ProductTypeController {
                 Map<String, CustomResponse> resultMap = new HashMap<>();
                 resultMap.put("result", customResponse);
                 responseDTO.setModelsis(resultMap);
-                log.info("Récupération du type de produit réussie : {} ",productTypeDto);
-            } else {
-                CustomResponse errorResponse = ResponseFactory.createCustomResponse(
-                        Constants.STATUS_MESSAGE_NOT_FOUND_BODY,
-                        Constants.STATUS_VALUE_BAD_REQUEST,
-                        "Aucun type de produit trouvé avec cette categorie: " + productType,
-                        null
-                );
+                log.info("Récupération du type de produit réussie : {} ",responseDTO.getModelsis().get(responseDTO).getData());
 
-                resultMap = new HashMap<>();
-                resultMap.put("result", errorResponse);
-                responseDTO.setModelsis(resultMap);
-                log.error("Aucun type de produit trouvé avec cette categorie:: {} ", productType);
-            }
-        } catch (Exception ex) {
+        }
+        catch (DataAccessException ex) {
             CustomResponse errorResponse = ResponseFactory.createCustomResponse(
                     Constants.STATUS_MESSAGE_NOT_FOUND_BODY,
                     Constants.STATUS_VALUE_BAD_REQUEST,
-                    "Erreur lors de la récupération du type de produit : " + ex.toString(),
+                    "Erreur de base de données lors de la recuperation du type de produit ",
+                    null
+            );
+
+            resultMap = new HashMap<>();
+            resultMap.put("result", errorResponse);
+            responseDTO.setModelsis(resultMap);
+            log.error("Erreur de base de données lors de la recuperation du type de produit  : " + ex.toString());
+        }
+        catch (Exception ex) {
+            CustomResponse errorResponse = ResponseFactory.createCustomResponse(
+                    Constants.STATUS_MESSAGE_NOT_FOUND_BODY,
+                    Constants.STATUS_VALUE_BAD_REQUEST,
+                    "Erreur lors de la récupération du type de produit ",
                     null
             );
 
@@ -182,6 +247,20 @@ public class ProductTypeController {
         ModelsIsResponseDTO responseDTO = new ModelsIsResponseDTO();
         try {
             ProductType updatedProduct = productTypeService.updateProductType(product);
+            if(updatedProduct == null){
+                CustomResponse customResponse = ResponseFactory.createCustomResponse(
+                        Constants.STATUS_MESSAGE_NOT_FOUND_BODY,
+                        Constants.STATUS_VALUE_BAD_REQUEST,
+                        "Erreur lor de la mise à jour du produit ",
+                        null
+                );
+
+                resultMap = new HashMap<>();
+                resultMap.put("result", customResponse);
+                responseDTO.setModelsis(resultMap);
+                log.info("Le Type de Produit {} n'à pas été mis à jour : {}", updatedProduct.getType(), updatedProduct.getId());
+
+            }
             ProductTypeDto productDto = new ProductTypeDto();
             productDto.setType(updatedProduct.getType());
             productDto.setIdTypeProduct(updatedProduct.getId());
@@ -197,7 +276,21 @@ public class ProductTypeController {
             resultMap.put("result", customResponse);
             responseDTO.setModelsis(resultMap);
             log.info("Le Type de Produit {} a été mis à jour avec succès : {}", updatedProduct.getType(), updatedProduct.getId());
-        } catch (Exception ex) {
+        }
+        catch (DataAccessException ex) {
+            CustomResponse errorResponse = ResponseFactory.createCustomResponse(
+                    Constants.STATUS_MESSAGE_NOT_FOUND_BODY,
+                    Constants.STATUS_VALUE_BAD_REQUEST,
+                    "Erreur de base de données lors de la mise à jour du type de produit ",
+                    null
+            );
+
+            resultMap = new HashMap<>();
+            resultMap.put("result", errorResponse);
+            responseDTO.setModelsis(resultMap);
+            log.error("Erreur de base de données lors de la mise à jour du type produit : " + ex.toString());
+        }
+        catch (Exception ex) {
             CustomResponse errorResponse = ResponseFactory.createCustomResponse(
                     Constants.STATUS_MESSAGE_NOT_FOUND_BODY,
                     Constants.STATUS_VALUE_BAD_REQUEST,
@@ -232,7 +325,21 @@ public class ProductTypeController {
              responseDTO.setModelsis(resultMap);
              log.info("Le Type de Produit {} a été supprimé avec succès",result.getType());
 
-         } catch (Exception ex) {
+         }
+         catch (DataAccessException ex) {
+             CustomResponse errorResponse = ResponseFactory.createCustomResponse(
+                     Constants.STATUS_MESSAGE_NOT_FOUND_BODY,
+                     Constants.STATUS_VALUE_BAD_REQUEST,
+                     "Erreur de base de données lors de la suppression d'un nouveau type de  produit ",
+                     null
+             );
+
+             resultMap = new HashMap<>();
+             resultMap.put("result", errorResponse);
+             responseDTO.setModelsis(resultMap);
+             log.error("Erreur de base de données lors de la suppression d'un nouveau type de produit ");
+         }
+         catch (Exception ex) {
              CustomResponse errorResponse = ResponseFactory.createCustomResponse(
                      Constants.STATUS_MESSAGE_NOT_FOUND_BODY,
                      Constants.STATUS_VALUE_BAD_REQUEST,
@@ -284,7 +391,21 @@ public class ProductTypeController {
             responseDTO.setModelsis(resultMap);
             log.info("Nouveau type de produit ajouté avec succès : {} ",productTypeDto);
 
-        } catch (IllegalArgumentException ex) {
+        }
+        catch (DataAccessException ex) {
+            CustomResponse errorResponse = ResponseFactory.createCustomResponse(
+                    Constants.STATUS_MESSAGE_NOT_FOUND_BODY,
+                    Constants.STATUS_VALUE_BAD_REQUEST,
+                    "Erreur de base de données lors de l'ajout d'un nouveau type de produit ",
+                    null
+            );
+
+            resultMap = new HashMap<>();
+            resultMap.put("result", errorResponse);
+            responseDTO.setModelsis(resultMap);
+            log.error("Erreur de base de données lors de l'ajout d'un nouveau type de produit : {} ",responseDTO.getModelsis().get(responseDTO).getData());
+        }
+        catch (Exception ex) {
             CustomResponse errorResponse = ResponseFactory.createCustomResponse(
                     Constants.STATUS_MESSAGE_BAD_REQUEST_BODY,
                     Constants.STATUS_VALUE_BAD_REQUEST,
@@ -300,5 +421,4 @@ public class ProductTypeController {
         }
         return responseDTO;
     }
-
 }

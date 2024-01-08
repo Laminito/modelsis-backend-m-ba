@@ -49,4 +49,5 @@ public class ProductType {
 
     public ProductType(String type) {
     }
+
 }
